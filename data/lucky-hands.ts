@@ -14,9 +14,16 @@ export type LuckyHand = {
   index: number;
   reading: string;
   hidden?: boolean;
+  royal?: boolean;
 };
 
-export const luckyPersonaKeys: PersonaKey[] = ["SSR", "MAGIC", "PEACE"];
+type LuckyPersonaKey = "SSR" | "MAGIC" | "PEACE";
+
+export const luckyPersonaKeys: LuckyPersonaKey[] = ["SSR", "MAGIC", "PEACE"];
+
+function isLuckyPersonaKey(personaKey: PersonaKey): personaKey is LuckyPersonaKey {
+  return luckyPersonaKeys.some((key) => key === personaKey);
+}
 
 export const hiddenLuckyHand: LuckyHand = {
   id: "blind",
@@ -31,6 +38,22 @@ export const hiddenLuckyHand: LuckyHand = {
   hidden: true,
   reading:
     "今天的幸运不在你知道多少，而在你敢不敢相信自己的第一反应。盲打签不是让你真的盲打，而是提醒你：有些选择不必过度解释，先感受，再行动。",
+};
+
+export const royalHiddenLuckyHand: LuckyHand = {
+  id: "aa-suited-royal",
+  code: "AA suited",
+  title: "隐藏皇家｜同色双 A",
+  cards: [
+    { rank: "A", suit: "heart" },
+    { rank: "A", suit: "heart" },
+  ],
+  keywords: ["离谱高光", "规则外", "皇家警察"],
+  index: 100,
+  hidden: true,
+  royal: true,
+  reading:
+    "这已经不是普通幸运签了，这手 AA 同色只能请皇家警察来打了。今天你的气场不负责讲道理，只负责让所有人暂停三秒：等等，刚才发生了什么？",
 };
 
 export const luckyHands: LuckyHand[] = [
@@ -322,32 +345,76 @@ export const luckyHands: LuckyHand[] = [
   },
 ];
 
+export const allLuckyHands = [hiddenLuckyHand, royalHiddenLuckyHand, ...luckyHands];
+
+export function findLuckyHand(id: string) {
+  return allLuckyHands.find((hand) => hand.id === id) ?? null;
+}
+
 export function drawLuckyHand() {
-  if (Math.random() < 0.03) {
+  const roll = Math.random();
+
+  if (roll < 0.01) {
+    return royalHiddenLuckyHand;
+  }
+
+  if (roll < 0.04) {
     return hiddenLuckyHand;
   }
 
   return luckyHands[Math.floor(Math.random() * luckyHands.length)];
 }
 
-export function getPersonaLuckyReading(personaKey: PersonaKey, hand: LuckyHand) {
-  const intros: Partial<Record<PersonaKey, string>> = {
-    SSR: hand.hidden
-      ? "你今天抽到的是隐藏款，主角剧本暂时不公开。"
-      : `${hand.code} 对 SSR 来说，是一张自带镜头感的手牌。`,
-    MAGIC: hand.hidden
-      ? "这张隐藏签对 MAGIC 来说像一阵突然变向的风。"
-      : `${hand.code} 对 MAGIC 来说，是直觉开始发声的信号。`,
-    PEACE: hand.hidden
-      ? "隐藏签提醒 PEACE：不知道答案也可以先放松。"
-      : `${hand.code} 对 PEACE 来说，是把节奏调舒服的提醒。`,
-  };
+const personaOpenings: Record<LuckyPersonaKey, string[]> = {
+  SSR: [
+    "对 SSR 来说，这是一张自带镜头感的手牌。",
+    "对 SSR 来说，这张牌像聚光灯突然打下来，别人还没反应过来，你已经入画了。",
+    "对 SSR 来说，这不是手牌，是一段高光预告片。",
+    "对 SSR 来说，它的重点不在强不强，而在一出现就很难被忽略。",
+  ],
+  MAGIC: [
+    "对 MAGIC 来说，这是一张直觉开始发声的手牌。",
+    "对 MAGIC 来说，这张牌像桌面上突然亮了一下的小预感。",
+    "对 MAGIC 来说，它不是答案，是某种正在靠近的信号。",
+    "对 MAGIC 来说，这张牌最玄的地方在于：你越不解释，它越像真的。",
+  ],
+  PEACE: [
+    "对 PEACE 来说，这是一张把节奏调舒服的手牌。",
+    "对 PEACE 来说，这张牌像给心态按了一下静音键。",
+    "对 PEACE 来说，它提醒你别被外界推着跑，舒服才是今天的主线。",
+    "对 PEACE 来说，这张牌不催你赢过谁，只提醒你稳稳地待在自己的节奏里。",
+  ],
+};
 
-  const outros: Partial<Record<PersonaKey, string>> = {
-    SSR: "今天别急着解释你的高光，先把镜头站稳。",
-    MAGIC: "今天可以相信那些反复出现的小预感，但记得给自己留一点回旋空间。",
-    PEACE: "今天的幸运来自不内耗，舒服地选择，安静地发光。",
-  };
+const personaClosings: Record<LuckyPersonaKey, string[]> = {
+  SSR: [
+    "今天别急着解释你的高光，先把镜头站稳。",
+    "今天适合少说两句，把出场感留给结果。",
+    "今天你的气场不需要旁白，站稳就够有戏。",
+    "今天别追着别人证明自己，镜头已经在你这边了。",
+  ],
+  MAGIC: [
+    "今天可以相信那些反复出现的小预感，但记得给自己留一点回旋空间。",
+    "今天别把每个直觉都讲成道理，玄学偶尔也需要一点留白。",
+    "今天适合顺着感觉走，但别忘了给自己留一条退路。",
+    "今天你的好运不一定讲逻辑，但会讲时机。",
+  ],
+  PEACE: [
+    "今天的幸运来自不内耗，舒服地选择，安静地发光。",
+    "今天别急着证明什么，把心态放平，好东西会自己靠近。",
+    "今天适合慢一点、稳一点，别让噪音抢走你的节奏。",
+    "今天先照顾好自己的状态，剩下的交给顺其自然。",
+  ],
+};
 
-  return `${intros[personaKey] ?? ""}${hand.reading}${outros[personaKey] ?? ""}`;
+export function getPersonaLuckyReading(personaKey: PersonaKey, hand: LuckyHand, variant = 0) {
+  if (!isLuckyPersonaKey(personaKey)) {
+    return hand.reading;
+  }
+
+  const key = personaKey;
+  const opening = personaOpenings[key][variant % personaOpenings[key].length];
+  const closing = personaClosings[key][variant % personaClosings[key].length];
+
+  return `${hand.code} ${opening}${hand.reading}${closing}`;
 }

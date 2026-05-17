@@ -58,12 +58,23 @@ export default function ResultClient() {
   const resultPayload = useMemo(() => parseStoredResult(storedResult), [storedResult]);
   const resultKey = resultPayload?.result ?? null;
   const [copyState, setCopyState] = useState("复制分享文案");
+  const [isRevealing, setIsRevealing] = useState(true);
 
   useEffect(() => {
     if (!resultPayload) {
       router.replace("/");
     }
   }, [resultPayload, router]);
+
+  useEffect(() => {
+    if (!resultPayload) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setIsRevealing(false), 1550);
+
+    return () => window.clearTimeout(timer);
+  }, [resultPayload]);
 
   if (!resultKey) {
     return (
@@ -99,6 +110,23 @@ export default function ResultClient() {
 
   return (
     <main className="page-shell">
+      {isRevealing ? (
+        <div className="result-ritual fixed inset-0 z-50 flex items-center justify-center bg-night/95 px-6 backdrop-blur-xl">
+          <div className="w-full max-w-sm text-center">
+            <div className="mx-auto mb-6 grid h-32 w-32 place-items-center rounded-full border border-violet/35 bg-violet-soft shadow-[0_0_70px_rgba(155,109,255,.28)]">
+              <div className="ritual-card-stack relative h-20 w-14">
+                <span className="absolute inset-0 rounded-xl border border-white/35 bg-white shadow-xl" />
+                <span className="absolute inset-0 rounded-xl border border-white/35 bg-white shadow-xl" />
+                <span className="absolute inset-0 rounded-xl border border-white/35 bg-white shadow-xl" />
+              </div>
+            </div>
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-violet">PokerTI Result</p>
+            <h2 className="mt-3 text-3xl font-black tracking-normal text-white">正在揭晓你的牌桌人格</h2>
+            <p className="mt-3 text-sm font-medium leading-6 text-white/55">洗牌、停顿、翻面。今天这张人格牌，只属于你。</p>
+          </div>
+        </div>
+      ) : null}
+
       <header className="mb-5 flex items-center justify-between">
         <Link href="/" className="text-sm font-black text-white/60">
           PokerTI
@@ -151,7 +179,9 @@ export default function ResultClient() {
             </div>
           </section>
 
-          {["SSR", "MAGIC", "PEACE"].includes(persona.key) ? <LuckyHandDraw personaKey={persona.key} /> : null}
+          {["SSR", "MAGIC", "PEACE"].includes(persona.key) ? (
+            <LuckyHandDraw personaKey={persona.key} resultSignature={storedResult ?? persona.key} />
+          ) : null}
 
           {rows.length > 0 ? (
             <section className="rounded-2xl border border-white/10 bg-panel p-4">
