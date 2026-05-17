@@ -69,7 +69,7 @@ export const questions: Question[] = [
     q: "你最喜欢的漂亮操作是？",
     options: [
       { text: "精准读出对手弱点，一手拿下。", scores: ["SHARK", "XUEBA", "FISHER"] },
-      { text: "最后突然反转，直接变成名场面。", scores: ["SSR", "MAGIC", "YOLO"] },
+      { text: "最后突然反转，直接变成名场面。", scores: ["SSR", "DRAMA", "YOLO"] },
       { text: "慢慢磨，少犯错，最后自然收下。", scores: ["ROCK", "PEACE", "TANK"] },
       { text: "用心理战把对手演进去。", scores: ["DRAMA", "TALKER", "BEEF"] },
     ],
@@ -87,7 +87,7 @@ export const questions: Question[] = [
     q: "你学习德扑最像哪种状态？",
     options: [
       { text: "看书、看视频、记范围，越学越上头。", scores: ["JUAN", "XUEBA", "TANK"] },
-      { text: "不太爱学理论，但我相信牌感。", scores: ["MAGIC", "SSR", "YOLO"] },
+      { text: "不太爱学理论，但我相信牌感。", scores: ["MAGIC", "PEACE", "YOLO"] },
       { text: "喜欢看实战，尤其是对手怎么犯错。", scores: ["FISHER", "SHARK", "GHOST"] },
       { text: "学可以，但别太累，开心最重要。", scores: ["PEACE", "TALKER", "RICH"] },
     ],
@@ -97,7 +97,7 @@ export const questions: Question[] = [
     options: [
       { text: "这手牌范围里该不该出现？", scores: ["XUEBA", "JUAN", "TANK"] },
       { text: "他刚才那个动作不自然。", scores: ["SHARK", "FISHER", "GHOST"] },
-      { text: "这把有感觉，能中。", scores: ["MAGIC", "SSR", "YOLO"] },
+      { text: "这把有感觉，能中。", scores: ["MAGIC", "BOOM", "YOLO"] },
       { text: "我要不要装得弱一点？", scores: ["DRAMA", "TALKER", "BEEF"] },
     ],
   },
@@ -107,7 +107,7 @@ export const questions: Question[] = [
       { text: "继续等，没必要硬参与。", scores: ["ROCK", "PEACE", "TANK"] },
       { text: "找机会动一下，不然太没存在感了。", scores: ["YOLO", "DRAMA", "TALKER"] },
       { text: "观察别人，没牌也能收集信息。", scores: ["GHOST", "FISHER", "SHARK"] },
-      { text: "怀疑今天座位、方向、饮料、衣服颜色都有问题。", scores: ["MAGIC", "BOOM", "SSR"] },
+      { text: "怀疑今天座位、方向、饮料、衣服颜色都有问题。", scores: ["MAGIC", "BOOM", "PEACE"] },
     ],
   },
   {
@@ -170,7 +170,7 @@ export const questions: Question[] = [
       { text: "抽象只是表面，我看到的是对手弱点和升级空间。", scores: ["JUAN", "SSR", "SHARK"] },
       { text: "我先笑一下，回去再把这手复盘到他怀疑人生。", scores: ["RICH", "BEEF", "JUAN"] },
       { text: "牌桌不能只有标准答案，偶尔爆一下才有空气感。", scores: ["BOOM", "ROCK", "PEACE"] },
-      { text: "不解释，玄学和数学有时候只是同一件事的两种叫法。", scores: ["MAGIC", "SSR", "XUEBA"] },
+      { text: "不解释，玄学和数学有时候只是同一件事的两种叫法。", scores: ["MAGIC", "XUEBA", "JUAN"] },
     ],
   },
   {
@@ -203,7 +203,7 @@ export const questions: Question[] = [
   {
     q: "遇到一个特别爱说“我随便玩玩”的人，你会？",
     options: [
-      { text: "很好，我先观察他随便到什么程度。", scores: ["MAGIC", "YOLO", "SSR"] },
+      { text: "很好，我先观察他随便到什么程度。", scores: ["FISHER", "YOLO", "SSR"] },
       { text: "我信一半，剩下一半放进观察名单。", scores: ["DRAMA", "XUEBA", "GHOST"] },
       { text: "顺着聊，让他多暴露一点真实习惯。", scores: ["FISHER", "TALKER", "RICH"] },
       { text: "默默调整策略，不让场面牵着走。", scores: ["ROCK", "SHARK", "JUAN"] },
@@ -239,7 +239,7 @@ export const questions: Question[] = [
   {
     q: "如果给你的牌桌人格配一首 BGM，你选？",
     options: [
-      { text: "开场就有鼓点，主打一个马上有戏。", scores: ["MAGIC", "YOLO", "SSR"] },
+      { text: "开场就有鼓点，主打一个马上有戏。", scores: ["DRAMA", "YOLO", "SSR"] },
       { text: "低音很重，像在暗处观察全场。", scores: ["DRAMA", "XUEBA", "GHOST"] },
       { text: "轻松但洗脑，大家不知不觉跟着你走。", scores: ["FISHER", "TALKER", "RICH"] },
       { text: "极简冷静，听起来就不像会乱动。", scores: ["ROCK", "SHARK", "JUAN"] },
@@ -259,7 +259,7 @@ export const questions: Question[] = [
     options: [
       { text: "一眼看穿对手是真松弛还是假松弛。", scores: ["JUAN", "RICH", "SHARK"] },
       { text: "自动屏蔽情绪噪音，只保留有效信息。", scores: ["ROCK", "BEEF", "PEACE"] },
-      { text: "关键时刻自带主角滤镜。", scores: ["YOLO", "BOOM", "TANK"] },
+      { text: "关键时刻自带主角滤镜。", scores: ["SSR", "YOLO", "BOOM"] },
       { text: "让别人永远猜不到我下一秒想干嘛。", scores: ["MAGIC", "DRAMA", "SSR"] },
     ],
   },
