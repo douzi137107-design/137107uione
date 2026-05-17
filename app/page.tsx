@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { questions } from "@/data/questions";
 import { complianceStatement, personaOrder } from "@/data/personas";
 
 export default function HomePage() {
@@ -18,7 +19,7 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-5xl font-black leading-tight tracking-normal text-white">
-            16题测出你的
+            {questions.length}题测出你的
             <span className="block bg-gradient-to-r from-felt via-white to-violet bg-clip-text text-transparent">
               PokerTI 牌桌人格
             </span>
@@ -28,7 +29,7 @@ export default function HomePage() {
         <div className="soft-card space-y-5 p-5">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="rounded-xl bg-white/5 p-3">
-              <p className="text-2xl font-black text-white">16</p>
+              <p className="text-2xl font-black text-white">{questions.length}</p>
               <p className="text-xs font-bold text-white/50">题目</p>
             </div>
             <div className="rounded-xl bg-white/5 p-3">

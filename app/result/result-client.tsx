@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import PersonaVisual from "@/components/persona-visual";
 import { complianceStatement, personaOrder, personas } from "@/data/personas";
 import { createEmptyScores, isPersonaKey, type ResultPayload, type ScoreMap } from "@/lib/scoring";
@@ -52,12 +52,17 @@ function topScoreRows(scores: ScoreMap | null) {
 }
 
 export default function ResultClient() {
-  const searchParams = useSearchParams();
+  const router = useRouter();
   const storedResult = useSyncExternalStore(subscribeToStorage, getStoredResultSnapshot, getServerSnapshot);
   const resultPayload = useMemo(() => parseStoredResult(storedResult), [storedResult]);
-  const queryType = searchParams.get("type");
-  const resultKey = isPersonaKey(queryType) ? queryType : resultPayload?.result ?? null;
+  const resultKey = resultPayload?.result ?? null;
   const [copyState, setCopyState] = useState("复制分享文案");
+
+  useEffect(() => {
+    if (!resultPayload) {
+      router.replace("/");
+    }
+  }, [resultPayload, router]);
 
   if (!resultKey) {
     return (
@@ -65,7 +70,7 @@ export default function ResultClient() {
         <section className="soft-card my-auto space-y-5 p-6 text-center">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-violet">PokerTI</p>
           <h1 className="text-3xl font-black tracking-normal text-white">还没有测试结果</h1>
-          <p className="text-sm leading-6 text-white/60">完成 16 道题后，这里会生成你的牌桌人格卡片。</p>
+          <p className="text-sm leading-6 text-white/60">完成 32 道题后，这里会生成你的牌桌人格卡片。</p>
           <Link href="/test" className="primary-button w-full">
             开始测试
           </Link>
@@ -77,6 +82,7 @@ export default function ResultClient() {
 
   const persona = personas[resultKey];
   const rows = topScoreRows(resultPayload?.scores ?? null);
+  const topScore = Math.max(1, rows[0]?.score ?? 1);
   const shareText = `我的 PokerTI 牌桌人格是：${persona.englishName}｜${persona.chineseName}。${persona.description} 你也来测测。`;
 
   async function copyShareText() {
@@ -154,7 +160,7 @@ export default function ResultClient() {
                     <div className="h-2 overflow-hidden rounded-full bg-white/10">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-felt to-violet"
-                        style={{ width: `${Math.max(8, (row.score / 16) * 100)}%` }}
+                        style={{ width: `${Math.max(8, (row.score / topScore) * 100)}%` }}
                       />
                     </div>
                     <span className="text-right text-xs font-black text-white/50">{row.score}</span>

@@ -24,12 +24,13 @@ export function createEmptyScores(): ScoreMap {
 export function calculateResult(answers: AnswerRecord[]): ResultPayload {
   const scores = createEmptyScores();
   const lateScores = createEmptyScores();
+  const lateStartIndex = Math.max(0, answers.length - 5);
 
   answers.forEach((answer) => {
     answer.scores.forEach((key) => {
       scores[key] += 1;
 
-      if (answer.questionIndex >= 11) {
+      if (answer.questionIndex >= lateStartIndex) {
         lateScores[key] += 1;
       }
     });
