@@ -36,6 +36,28 @@ a {
   color: #ffffff;
 }
 
+@keyframes lucky-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    filter: blur(6px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.lucky-card-face {
+  animation: lucky-rise 460ms ease-out both;
+}
+
+.lucky-card-face:nth-child(2) {
+  animation-delay: 80ms;
+}
+
 @layer components {
   .page-shell {
     @apply mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-5 sm:max-w-lg;

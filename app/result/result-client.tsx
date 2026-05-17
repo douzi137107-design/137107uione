@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import LuckyHandDraw from "@/components/lucky-hand-draw";
 import PersonaVisual from "@/components/persona-visual";
 import { complianceStatement, personaOrder, personas } from "@/data/personas";
 import { createEmptyScores, isPersonaKey, type ResultPayload, type ScoreMap } from "@/lib/scoring";
@@ -149,6 +150,8 @@ export default function ResultClient() {
               ))}
             </div>
           </section>
+
+          {["SSR", "MAGIC", "PEACE"].includes(persona.key) ? <LuckyHandDraw personaKey={persona.key} /> : null}
 
           {rows.length > 0 ? (
             <section className="rounded-2xl border border-white/10 bg-panel p-4">
