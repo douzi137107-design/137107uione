@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { questions } from "@/data/questions";
-import { complianceStatement, personaOrder } from "@/data/personas";
+import { complianceStatement } from "@/data/personas";
 
 export default function HomePage() {
   return (
@@ -8,7 +8,7 @@ export default function HomePage() {
       <section className="flex flex-1 flex-col justify-between gap-7">
         <div className="space-y-6 pt-4">
           <div className="flex flex-wrap gap-2">
-            {["PokerTI Beta", "16 种牌桌人格", "娱乐测评"].map((tag) => (
+            {["PokerTI Beta", "16 种+1隐藏人格", "娱乐测评"].map((tag) => (
               <span
                 key={tag}
                 className="rounded-full border border-violet/30 bg-violet-soft px-3 py-1 text-xs font-black text-violet"
@@ -33,7 +33,7 @@ export default function HomePage() {
               <p className="text-xs font-bold text-white/50">题目</p>
             </div>
             <div className="rounded-xl bg-white/5 p-3">
-              <p className="text-2xl font-black text-white">{personaOrder.length}</p>
+              <p className="text-2xl font-black text-white">16+1</p>
               <p className="text-xs font-bold text-white/50">人格</p>
             </div>
             <div className="rounded-xl bg-white/5 p-3">
@@ -51,7 +51,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <p className="pb-1 text-center text-xs font-bold text-white/35">作者 @豆子</p>
+        <p className="pb-1 text-center text-xs font-bold text-white/35">反馈建议微信：dou2392</p>
       </section>
     </main>
   );

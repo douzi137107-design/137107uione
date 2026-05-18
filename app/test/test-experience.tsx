@@ -33,7 +33,7 @@ export default function TestExperience() {
     }
 
     const option = currentQuestion.options[optionIndex];
-    const answer = optionToAnswerRecord(currentIndex, option);
+    const answer = optionToAnswerRecord(currentIndex, optionIndex, option);
     const nextAnswers = [...answers];
     nextAnswers[currentIndex] = answer;
 
@@ -144,7 +144,7 @@ export default function TestExperience() {
             <p className="mt-4 text-center text-xs leading-5 text-white/40">
               {complianceStatement}
             </p>
-            <p className="mt-2 text-center text-xs font-bold text-white/35">作者 @豆子</p>
+            <p className="mt-2 text-center text-xs font-bold text-white/35">反馈建议微信：dou2392</p>
           </div>
         </div>
       </section>

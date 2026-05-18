@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "PokerTI 牌桌人格测试",
-  description: "32题测出你的 PokerTI 牌桌人格，一个娱乐向德扑兴趣社交人格测试。",
+  description: "35题测出你的 PokerTI 牌桌人格，一个娱乐向德扑兴趣社交人格测试。",
 };
 
 export const viewport: Viewport = {

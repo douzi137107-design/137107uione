@@ -5,6 +5,7 @@ export type ScoreMap = Record<PersonaKey, number>;
 
 export type AnswerRecord = {
   questionIndex: number;
+  optionIndex: number;
   scores: PersonaKey[];
 };
 
@@ -12,7 +13,19 @@ export type ResultPayload = {
   result: PersonaKey;
   scores: ScoreMap;
   lateScores: ScoreMap;
+  hiddenCorrectCount?: number;
+  hiddenUnlocked?: "BUG" | "KING" | null;
 };
+
+const expertPath = [
+  2, 3, 0, 0, 0, 0, 0, 2,
+  0, 0, 2, 3, 2, 2, 0, 2,
+  2, 0, 3, 3, 2, 3, 2, 0,
+  1, 3, 2, 0, 3, 3, 2, 0,
+];
+
+const hiddenCorrectOptions = [2, 0, 3];
+const baseQuestionCount = expertPath.length;
 
 export function createEmptyScores(): ScoreMap {
   return personaOrder.reduce((scores, key) => {
@@ -24,9 +37,11 @@ export function createEmptyScores(): ScoreMap {
 export function calculateResult(answers: AnswerRecord[]): ResultPayload {
   const scores = createEmptyScores();
   const lateScores = createEmptyScores();
-  const lateStartIndex = Math.max(0, answers.length - 5);
+  const normalAnswers = answers.filter((answer) => answer.questionIndex < baseQuestionCount);
+  const hiddenAnswers = answers.filter((answer) => answer.questionIndex >= baseQuestionCount);
+  const lateStartIndex = Math.max(0, normalAnswers.length - 5);
 
-  answers.forEach((answer) => {
+  normalAnswers.forEach((answer) => {
     answer.scores.forEach((key) => {
       scores[key] += 1;
 
@@ -35,6 +50,14 @@ export function calculateResult(answers: AnswerRecord[]): ResultPayload {
       }
     });
   });
+
+  const isExpertPath = expertPath.every((optionIndex, questionIndex) =>
+    normalAnswers.some((answer) => answer.questionIndex === questionIndex && answer.optionIndex === optionIndex),
+  );
+  const hiddenCorrectCount = hiddenCorrectOptions.reduce((count, optionIndex, index) => {
+    const answer = hiddenAnswers.find((item) => item.questionIndex === baseQuestionCount + index);
+    return count + (answer?.optionIndex === optionIndex ? 1 : 0);
+  }, 0);
 
   const result = personaOrder.reduce((winner, key) => {
     if (scores[key] > scores[winner]) {
@@ -48,12 +71,21 @@ export function calculateResult(answers: AnswerRecord[]): ResultPayload {
     return winner;
   }, personaOrder[0]);
 
-  return { result, scores, lateScores };
+  if (isExpertPath && hiddenCorrectCount === 3) {
+    return { result: "KING", scores, lateScores, hiddenCorrectCount, hiddenUnlocked: "KING" };
+  }
+
+  if (isExpertPath && hiddenCorrectCount === 2) {
+    return { result: "BUG", scores, lateScores, hiddenCorrectCount, hiddenUnlocked: "BUG" };
+  }
+
+  return { result, scores, lateScores, hiddenCorrectCount, hiddenUnlocked: null };
 }
 
-export function optionToAnswerRecord(questionIndex: number, option: AnswerOption): AnswerRecord {
+export function optionToAnswerRecord(questionIndex: number, optionIndex: number, option: AnswerOption): AnswerRecord {
   return {
     questionIndex,
+    optionIndex,
     scores: option.scores,
   };
 }

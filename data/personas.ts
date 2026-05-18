@@ -15,6 +15,8 @@ export const personaOrder = [
   "TANK",
   "PEACE",
   "ROCK",
+  "BUG",
+  "KING",
 ] as const;
 
 export type PersonaKey = (typeof personaOrder)[number];
@@ -173,6 +175,26 @@ export const personas: Record<PersonaKey, Persona> = {
     description: "你稳得像一块石头，很少被情绪推着走。你相信耐心和纪律，也愿意等到局面足够清晰。",
     strengths: ["谨慎可靠", "耐心扎实", "不容易被诱导"],
     improvements: ["别让稳变成太可预测", "适度变化会让你更难被读懂"],
+  },
+  BUG: {
+    key: "BUG",
+    englishName: "BUG",
+    chineseName: "系统漏洞",
+    image: "/personas/bug.png",
+    description:
+      "你不是某一种牌桌人格，你像是把 16 种人格都偷偷点满了。该稳的时候像 ROCK，该冲的时候像 YOLO，该算的时候像 XUEBA，该演的时候像 DRAMA。你能聊天，也能隐身；能给压力，也能及时收手。别人还在猜你是什么类型，你已经在根据他们的类型换打法了。系统原本想给你贴标签，结果标签自己 fold 了。",
+    strengths: ["全局适应", "情绪稳定", "读人精准", "策略灵活"],
+    improvements: ["未发现明显短板"],
+  },
+  KING: {
+    key: "KING",
+    englishName: "KING",
+    chineseName: "被雪藏的王",
+    image: "/personas/king.png",
+    description:
+      "系统原本也想把你归类，但归到最后发现：你不在分类表里，你在分类表上面。曾经，KING 是牌桌人格系统里的公开人格。但因为他太全面、太稳定、太有压制力，导致其他人格都像陪衬。后来，系统为了平衡生态，也为了给其他人格留出曝光空间，悄悄把 KING 从公开结果池里下架了。只有极少数人，在稳定、自控、逻辑、读人、控场、压迫感全部拉满时，系统才会重新识别出那个被雪藏的名字：KING。",
+    strengths: ["稳定自控", "逻辑压制", "精准读人", "全局控场"],
+    improvements: ["容易被误判为普通玩家", "不喜欢暴露全部实力", "对低质量局面耐心有限"],
   },
 };
 
