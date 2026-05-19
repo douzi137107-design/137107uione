@@ -24,12 +24,23 @@ export const expertPath = [
   1, 3, 2, 0, 3, 3, 2, 0,
 ];
 
+const technicalExpertPath = [
+  2, 0, 0, 0, 0, 0, 0, 2,
+  0, 0, 0, 0, 0, 2, 0, 3,
+  0, 3, 3, 0, 0, 1, 2, 0,
+  0, 1, 2, 0, 0, 1, 2, 0,
+];
+
+const hiddenEntryPaths = [expertPath, technicalExpertPath];
+
 export const hiddenCorrectOptions = [2, 0, 3];
 export const baseQuestionCount = expertPath.length;
 
 export function isExpertPathAnswers(answers: AnswerRecord[]) {
-  return expertPath.every((optionIndex, questionIndex) =>
-    answers.some((answer) => answer.questionIndex === questionIndex && answer.optionIndex === optionIndex),
+  return hiddenEntryPaths.some((path) =>
+    path.every((optionIndex, questionIndex) =>
+      answers.some((answer) => answer.questionIndex === questionIndex && answer.optionIndex === optionIndex),
+    ),
   );
 }
 
