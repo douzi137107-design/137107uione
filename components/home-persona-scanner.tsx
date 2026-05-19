@@ -47,6 +47,7 @@ export default function HomePersonaScanner() {
     <div className="home-hero-visual">
       <div className="home-table-ring" />
       <div className={isBugFlash ? "home-scanner-card home-scanner-card-bug" : "home-scanner-card"}>
+        <div className="home-scanner-aura" />
         <div className="home-scan-line" />
         <Image
           key={`${persona.key}-${scanCount}`}
@@ -57,6 +58,12 @@ export default function HomePersonaScanner() {
           className={isBugFlash ? "home-scanner-image home-scanner-image-bug" : "home-scanner-image"}
           priority
         />
+        <div className="home-scanner-corners" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
       </div>
     </div>
   );

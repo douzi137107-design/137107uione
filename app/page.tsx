@@ -21,10 +21,13 @@ export default function HomePage() {
           <HomePersonaScanner />
 
           <div className="space-y-4">
-            <h1 className="text-5xl font-black leading-tight tracking-normal text-white">
+            <h1 className="text-[2.72rem] font-black leading-[1.12] tracking-normal text-white min-[390px]:text-5xl">
               32题测出你的
               <span className="block bg-gradient-to-r from-[#d7b46a] via-white to-violet bg-clip-text text-transparent">
-                PokerTI 牌桌人格
+                PokerTI
+              </span>
+              <span className="block bg-gradient-to-r from-white via-[#d7b46a] to-violet bg-clip-text text-transparent">
+                牌桌人格
               </span>
             </h1>
             <p className="text-base font-medium leading-8 text-white/62">

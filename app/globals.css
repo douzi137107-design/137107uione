@@ -53,11 +53,54 @@ a {
 @keyframes home-card-float {
   0%,
   100% {
-    transform: translateY(0) rotateX(0deg);
+    transform: translateY(0) rotateX(0deg) rotateZ(-0.25deg);
   }
 
   50% {
-    transform: translateY(-8px) rotateX(2deg);
+    transform: translateY(-7px) rotateX(1.4deg) rotateZ(0.25deg);
+  }
+}
+
+@keyframes home-border-sheen {
+  0% {
+    transform: translateX(-110%) rotate(16deg);
+    opacity: 0;
+  }
+
+  18%,
+  54% {
+    opacity: 0.72;
+  }
+
+  100% {
+    transform: translateX(260%) rotate(16deg);
+    opacity: 0;
+  }
+}
+
+@keyframes home-frame-pulse {
+  0%,
+  100% {
+    opacity: 0.58;
+    filter: drop-shadow(0 0 0 rgba(215, 180, 106, 0));
+  }
+
+  50% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(215, 180, 106, 0.18));
+  }
+}
+
+@keyframes home-aura-breathe {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 0.88;
+    transform: scale(1.04);
   }
 }
 
@@ -105,14 +148,14 @@ a {
 @keyframes home-persona-swap {
   0% {
     opacity: 0;
-    transform: translateY(8px) scale(0.96);
-    filter: blur(10px) saturate(0.86);
+    transform: translateY(10px) scale(0.96);
+    filter: blur(12px) saturate(0.82) brightness(0.9);
   }
 
   62% {
     opacity: 1;
-    transform: translateY(0) scale(1.04);
-    filter: blur(0) saturate(1.05);
+    transform: translateY(0) scale(1.025);
+    filter: blur(0) saturate(1.04) brightness(1.02);
   }
 
   100% {
@@ -277,22 +320,41 @@ a {
   min-height: 318px;
   place-items: center;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 28px;
+  border: 1px solid rgba(215, 180, 106, 0.16);
+  border-radius: 30px;
   background:
-    radial-gradient(circle at 50% 18%, rgba(215, 180, 106, 0.14), transparent 11rem),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+    radial-gradient(circle at 50% 18%, rgba(215, 180, 106, 0.16), transparent 11rem),
+    radial-gradient(circle at 20% 88%, rgba(48, 213, 138, 0.08), transparent 10rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.018)),
     #0d0f18;
-  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(215, 180, 106, 0.08),
+    inset 0 0 46px rgba(215, 180, 106, 0.03),
+    0 22px 60px rgba(0, 0, 0, 0.34);
 }
 
 .home-hero-visual::before {
   position: absolute;
   inset: 0;
   content: "";
+  border-radius: inherit;
   background:
-    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.12), transparent 8rem),
-    linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.18));
+    linear-gradient(90deg, rgba(215, 180, 106, 0.22), transparent 18%, transparent 82%, rgba(155, 109, 255, 0.18)),
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.1), transparent 8rem),
+    linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.2));
+  pointer-events: none;
+}
+
+.home-hero-visual::after {
+  position: absolute;
+  inset: 11px;
+  content: "";
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 0 1px rgba(215, 180, 106, 0.035),
+    0 0 28px rgba(0, 0, 0, 0.14);
   pointer-events: none;
 }
 
@@ -300,12 +362,13 @@ a {
   position: absolute;
   width: 88%;
   aspect-ratio: 1.8;
-  border: 1px solid rgba(215, 180, 106, 0.18);
+  border: 1px solid rgba(215, 180, 106, 0.2);
   border-radius: 999px;
   background:
     linear-gradient(90deg, transparent, rgba(48, 213, 138, 0.08), transparent),
     rgba(255, 255, 255, 0.02);
   transform: translateY(28px);
+  box-shadow: inset 0 0 28px rgba(215, 180, 106, 0.04);
 }
 
 .home-card-back {
@@ -332,19 +395,46 @@ a {
 .home-scanner-card {
   position: relative;
   z-index: 2;
-  width: min(78%, 312px);
+  width: min(76%, 304px);
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid rgba(215, 180, 106, 0.3);
-  border-radius: 26px;
+  border: 1px solid transparent;
+  border-radius: 28px;
   background:
-    radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.11), transparent 9rem),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    #0d0f18;
+    linear-gradient(#0d0f18, #0d0f18) padding-box,
+    linear-gradient(145deg, rgba(255, 255, 255, 0.38), rgba(215, 180, 106, 0.34) 42%, rgba(155, 109, 255, 0.2) 74%, rgba(255, 255, 255, 0.18)) border-box;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 24px 56px rgba(0, 0, 0, 0.42);
-  animation: home-card-float 6s ease-in-out infinite;
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -22px 50px rgba(0, 0, 0, 0.24),
+    0 26px 58px rgba(0, 0, 0, 0.44);
+  animation: home-card-float 7.2s ease-in-out infinite;
+}
+
+.home-scanner-card::before {
+  position: absolute;
+  z-index: 3;
+  content: "";
+  top: -18%;
+  bottom: -18%;
+  left: 0;
+  width: 38%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.17), transparent);
+  pointer-events: none;
+  animation: home-border-sheen 6.8s ease-in-out infinite;
+}
+
+.home-scanner-card::after {
+  position: absolute;
+  inset: 9px;
+  z-index: 2;
+  content: "";
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 22%),
+    radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.34), transparent 46%);
+  pointer-events: none;
 }
 
 .home-scanner-card-bug {
@@ -355,26 +445,42 @@ a {
     0 24px 56px rgba(0, 0, 0, 0.42);
 }
 
+.home-scanner-aura {
+  position: absolute;
+  inset: 12%;
+  z-index: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(215, 180, 106, 0.2), transparent 58%),
+    radial-gradient(circle at 60% 35%, rgba(155, 109, 255, 0.22), transparent 54%);
+  filter: blur(4px);
+  animation: home-aura-breathe 5.6s ease-in-out infinite;
+}
+
 .home-scanner-card-bug::after {
   position: absolute;
   inset: 0;
+  z-index: 2;
   content: "";
   background:
-    repeating-linear-gradient(0deg, rgba(155, 109, 255, 0.14) 0 2px, transparent 2px 18px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 22%),
+    repeating-linear-gradient(0deg, rgba(155, 109, 255, 0.1) 0 1px, transparent 1px 20px),
     linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
   mix-blend-mode: screen;
   pointer-events: none;
 }
 
 .home-scanner-image {
+  z-index: 1;
   object-fit: contain;
   object-position: center;
   padding: 18px;
   transform-origin: center;
-  animation: home-persona-swap 980ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: home-persona-swap 1180ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .home-scanner-image-bug {
+  z-index: 1;
   object-fit: contain;
   object-position: center;
   padding: 12px;
@@ -382,15 +488,61 @@ a {
   animation: home-bug-flash 1080ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.home-scanner-corners {
+  position: absolute;
+  inset: 13px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.home-scanner-corners span {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: rgba(215, 180, 106, 0.64);
+  animation: home-frame-pulse 4.8s ease-in-out infinite;
+}
+
+.home-scanner-corners span:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.home-scanner-corners span:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+
+.home-scanner-corners span:nth-child(3) {
+  right: 0;
+  bottom: 0;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.home-scanner-corners span:nth-child(4) {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+
 .home-scan-line {
   position: absolute;
-  left: 10%;
-  right: 10%;
+  left: 8%;
+  right: 8%;
   top: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(215, 180, 106, 0.9), rgba(155, 109, 255, 0.9), transparent);
-  box-shadow: 0 0 22px rgba(215, 180, 106, 0.46);
-  animation: home-scan 5.8s ease-in-out infinite;
+  z-index: 5;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(215, 180, 106, 0.86), rgba(255, 255, 255, 0.86), rgba(155, 109, 255, 0.72), transparent);
+  box-shadow:
+    0 0 18px rgba(215, 180, 106, 0.44),
+    0 0 34px rgba(155, 109, 255, 0.18);
+  animation: home-scan 6.8s ease-in-out infinite;
 }
 
 .home-pocket-card {
