@@ -182,7 +182,7 @@ export default function ResultClient() {
       ? "系统原本想给我贴标签，结果标签自己 fold 了。"
       : persona.key === "KING"
         ? "不是我没有标签，是系统不敢轻易给我贴标签。"
-        : shareText;
+        : `我的 PokerTI 牌桌人格是：${posterTitle}。你也来测测。`;
 
   async function createSharePoster() {
     setShareState("生成分享图中...");
@@ -211,104 +211,126 @@ export default function ResultClient() {
       ctx.fillRect(0, 0, posterWidth, posterHeight);
 
       ctx.save();
-      ctx.globalAlpha = isHiddenPersona ? 0.16 : 0.1;
+      ctx.globalAlpha = isHiddenPersona ? 0.16 : 0.09;
       ctx.fillStyle = accent;
       ctx.font = "900 54px Arial, 'Microsoft YaHei', sans-serif";
-      ctx.translate(120, 210);
+      ctx.translate(124, 198);
       ctx.rotate(-0.32);
       for (let row = 0; row < 6; row += 1) {
         for (let col = 0; col < 3; col += 1) {
-          ctx.fillText("pokerti.top", col * 390, row * 240);
+          ctx.fillText("pokerti.top", col * 390, row * 238);
         }
       }
       ctx.restore();
 
       ctx.save();
-      roundedRect(ctx, 54, 54, 972, 1332, 46);
-      ctx.fillStyle = "rgba(255,255,255,0.055)";
+      roundedRect(ctx, 52, 52, 976, 1336, 52);
+      ctx.fillStyle = "rgba(255,255,255,0.052)";
       ctx.fill();
-      ctx.strokeStyle = isRoyal ? "rgba(245,184,74,0.42)" : "rgba(255,255,255,0.16)";
+      ctx.strokeStyle = isRoyal ? "rgba(245,184,74,0.48)" : persona.key === "BUG" ? "rgba(155,109,255,0.42)" : "rgba(255,255,255,0.15)";
       ctx.lineWidth = 2;
       ctx.stroke();
       ctx.restore();
 
       ctx.save();
-      roundedRect(ctx, 90, 82, 900, 560, 38);
-      ctx.fillStyle = isRoyal ? "rgba(245,184,74,0.09)" : "rgba(155,109,255,0.12)";
+      roundedRect(ctx, 78, 76, 924, 756, 44);
+      const imagePanel = ctx.createLinearGradient(78, 76, 1002, 832);
+      imagePanel.addColorStop(0, isRoyal ? "rgba(245,184,74,0.16)" : "rgba(255,255,255,0.08)");
+      imagePanel.addColorStop(1, persona.key === "BUG" ? "rgba(155,109,255,0.16)" : "rgba(0,0,0,0.2)");
+      ctx.fillStyle = imagePanel;
       ctx.fill();
       ctx.clip();
       try {
         const image = await loadPosterImage(persona.image);
-        const ratio = Math.min(900 / image.width, 560 / image.height);
+        const ratio = Math.min(924 / image.width, 756 / image.height);
         const width = image.width * ratio;
         const height = image.height * ratio;
-        ctx.drawImage(image, 90 + (900 - width) / 2, 82 + (560 - height) / 2, width, height);
+        ctx.drawImage(image, 78 + (924 - width) / 2, 76 + (756 - height) / 2, width, height);
       } catch {
         ctx.fillStyle = "rgba(155,109,255,0.24)";
-        ctx.fillRect(90, 82, 900, 560);
+        ctx.fillRect(78, 76, 924, 756);
         ctx.fillStyle = "#ffffff";
         ctx.font = "900 112px Arial, 'Microsoft YaHei', sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(persona.englishName, 540, 380);
+        ctx.fillText(persona.englishName, 540, 448);
       }
+      const imageFade = ctx.createLinearGradient(0, 570, 0, 840);
+      imageFade.addColorStop(0, "rgba(7,8,13,0)");
+      imageFade.addColorStop(1, "rgba(7,8,13,0.88)");
+      ctx.fillStyle = imageFade;
+      ctx.fillRect(78, 560, 924, 280);
       ctx.restore();
 
+      if (persona.key === "BUG") {
+        ctx.save();
+        ctx.globalAlpha = 0.24;
+        ctx.strokeStyle = "#9b6dff";
+        ctx.lineWidth = 3;
+        for (let y = 156; y < 760; y += 66) {
+          ctx.beginPath();
+          ctx.moveTo(104, y);
+          ctx.lineTo(986, y + (y % 132 === 0 ? 16 : -12));
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
       ctx.save();
-      const fade = ctx.createLinearGradient(0, 500, 0, 675);
-      fade.addColorStop(0, "rgba(7,8,13,0)");
-      fade.addColorStop(1, "#07080d");
-      ctx.fillStyle = fade;
-      ctx.fillRect(90, 490, 900, 190);
+      roundedRect(ctx, 86, isHiddenPersona ? 718 : 744, 908, isHiddenPersona ? 492 : 456, 38);
+      ctx.fillStyle = "rgba(7,8,13,0.78)";
+      ctx.fill();
+      ctx.strokeStyle = isRoyal ? "rgba(245,184,74,0.26)" : "rgba(255,255,255,0.12)";
+      ctx.stroke();
       ctx.restore();
 
       ctx.textAlign = "left";
       ctx.fillStyle = accent;
-      ctx.font = "900 30px Arial, 'Microsoft YaHei', sans-serif";
-      ctx.fillText(isHiddenPersona ? "HIDDEN ARCHIVE" : "POKERTI RESULT", 100, 720);
+      ctx.font = "900 28px Arial, 'Microsoft YaHei', sans-serif";
+      ctx.fillText(isRoyal ? "SEALED KING" : isBug ? "SYSTEM GLITCH" : "POKERTI RESULT", 116, isHiddenPersona ? 786 : 812);
 
       ctx.fillStyle = "#ffffff";
-      ctx.font = isHiddenPersona ? "900 90px Arial, 'Microsoft YaHei', sans-serif" : "900 92px Arial, 'Microsoft YaHei', sans-serif";
-      drawWrappedText(ctx, posterTitle, 96, 820, 888, 98, 2);
+      ctx.font = isHiddenPersona ? "900 88px Arial, 'Microsoft YaHei', sans-serif" : "900 76px Arial, 'Microsoft YaHei', sans-serif";
+      drawWrappedText(ctx, posterTitle, 112, isHiddenPersona ? 890 : 902, 840, isHiddenPersona ? 92 : 84, 2);
 
-      ctx.fillStyle = "rgba(255,255,255,0.74)";
-      ctx.font = "800 30px Arial, 'Microsoft YaHei', sans-serif";
-      ctx.fillText(isHiddenPersona ? "隐藏人格已解锁" : "你的人格标签", 102, 952);
+      ctx.fillStyle = "rgba(255,255,255,0.66)";
+      ctx.font = "800 26px Arial, 'Microsoft YaHei', sans-serif";
+      ctx.fillText(isHiddenPersona ? "隐藏人格已解锁" : "你的人格标签", 116, isHiddenPersona ? 1024 : 1000);
 
-      let tagX = 100;
-      let tagY = 984;
+      let tagX = 116;
+      let tagY = isHiddenPersona ? 1054 : 1030;
       persona.strengths.slice(0, 4).forEach((tag) => {
-        ctx.font = "800 28px Arial, 'Microsoft YaHei', sans-serif";
-        const width = Math.min(300, ctx.measureText(tag).width + 48);
-        if (tagX + width > 980) {
-          tagX = 100;
-          tagY += 58;
+        ctx.font = "800 26px Arial, 'Microsoft YaHei', sans-serif";
+        const width = Math.min(300, ctx.measureText(tag).width + 44);
+        if (tagX + width > 964) {
+          tagX = 116;
+          tagY += 54;
         }
-        roundedRect(ctx, tagX, tagY, width, 42, 21);
-        ctx.fillStyle = "rgba(48,213,138,0.14)";
+        roundedRect(ctx, tagX, tagY, width, 40, 20);
+        ctx.fillStyle = isRoyal ? "rgba(245,184,74,0.16)" : "rgba(48,213,138,0.14)";
         ctx.fill();
-        ctx.fillStyle = "#67f0b0";
-        ctx.fillText(tag, tagX + 24, tagY + 30);
-        tagX += width + 16;
+        ctx.fillStyle = isRoyal ? "#ffe39a" : "#67f0b0";
+        ctx.fillText(tag, tagX + 22, tagY + 28);
+        tagX += width + 14;
       });
 
-      ctx.fillStyle = "rgba(255,255,255,0.78)";
-      ctx.font = "700 31px Arial, 'Microsoft YaHei', sans-serif";
-      drawWrappedText(ctx, posterIntro, 104, 1114, 872, 42, 3);
+      ctx.fillStyle = "rgba(255,255,255,0.82)";
+      ctx.font = "700 30px Arial, 'Microsoft YaHei', sans-serif";
+      drawWrappedText(ctx, posterIntro, 116, isHiddenPersona ? 1172 : 1148, 840, 40, isHiddenPersona ? 3 : 4);
 
       ctx.save();
-      roundedRect(ctx, 90, 1262, 900, 92, 30);
-      ctx.fillStyle = "rgba(255,255,255,0.075)";
+      roundedRect(ctx, 86, 1234, 908, 96, 30);
+      ctx.fillStyle = isRoyal ? "rgba(245,184,74,0.12)" : persona.key === "BUG" ? "rgba(155,109,255,0.16)" : "rgba(255,255,255,0.075)";
       ctx.fill();
       ctx.strokeStyle = "rgba(255,255,255,0.12)";
       ctx.stroke();
-      ctx.fillStyle = "rgba(255,255,255,0.82)";
-      ctx.font = "800 24px Arial, 'Microsoft YaHei', sans-serif";
-      drawWrappedText(ctx, posterShareText, 126, 1300, 832, 34, 2);
+      ctx.fillStyle = "rgba(255,255,255,0.86)";
+      ctx.font = "800 25px Arial, 'Microsoft YaHei', sans-serif";
+      drawWrappedText(ctx, posterShareText, 122, 1274, 836, 34, 2);
       ctx.restore();
 
       ctx.fillStyle = secondaryAccent;
       ctx.font = "900 28px Arial, 'Microsoft YaHei', sans-serif";
-      ctx.fillText("pokerti.top", 100, 1374);
+      ctx.fillText("pokerti.top", 92, 1372);
 
       ctx.textAlign = "right";
       ctx.fillStyle = "rgba(255,255,255,0.5)";
@@ -316,9 +338,9 @@ export default function ResultClient() {
       drawWrappedText(
         ctx,
         "本测试仅用于德扑兴趣社交娱乐交流，不提供金钱输赢建议，禁止任何形式的赌博行为。",
-        990,
-        1358,
-        470,
+        986,
+        1356,
+        500,
         26,
         2,
       );
