@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { questions } from "@/data/questions";
 import { complianceStatement } from "@/data/personas";
-import { calculateResult, optionToAnswerRecord, type AnswerRecord } from "@/lib/scoring";
+import {
+  baseQuestionCount,
+  calculateResult,
+  isExpertPathAnswers,
+  optionToAnswerRecord,
+  type AnswerRecord,
+} from "@/lib/scoring";
 
 const emptyAnswers = Array<AnswerRecord | null>(questions.length).fill(null);
 
@@ -13,12 +19,16 @@ export default function TestExperience() {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Array<AnswerRecord | null>>(emptyAnswers);
+  const [hiddenQuestionsUnlocked, setHiddenQuestionsUnlocked] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentQuestion = questions[currentIndex];
-  const answeredCount = answers.filter(Boolean).length;
-  const progress = Math.round((answeredCount / questions.length) * 100);
+  const totalVisibleQuestions = hiddenQuestionsUnlocked ? questions.length : baseQuestionCount;
+  const answeredCount = answers
+    .slice(0, totalVisibleQuestions)
+    .filter(Boolean).length;
+  const progress = Math.round((answeredCount / totalVisibleQuestions) * 100);
 
   function persistAndRoute(nextAnswers: AnswerRecord[]) {
     const resultPayload = calculateResult(nextAnswers);
@@ -42,6 +52,19 @@ export default function TestExperience() {
 
     timerRef.current = setTimeout(() => {
       setSelectedOptionIndex(null);
+
+      if (currentIndex === baseQuestionCount - 1) {
+        const completedBaseAnswers = nextAnswers.slice(0, baseQuestionCount).filter(Boolean) as AnswerRecord[];
+
+        if (isExpertPathAnswers(completedBaseAnswers)) {
+          setHiddenQuestionsUnlocked(true);
+          setCurrentIndex(baseQuestionCount);
+          return;
+        }
+
+        persistAndRoute(completedBaseAnswers);
+        return;
+      }
 
       if (currentIndex === questions.length - 1) {
         persistAndRoute(nextAnswers.filter(Boolean) as AnswerRecord[]);
@@ -69,6 +92,7 @@ export default function TestExperience() {
     window.localStorage.removeItem("pokerti.answers");
     window.localStorage.removeItem("pokerti.result");
     setAnswers(emptyAnswers);
+    setHiddenQuestionsUnlocked(false);
     setSelectedOptionIndex(null);
     setCurrentIndex(0);
   }
@@ -91,7 +115,7 @@ export default function TestExperience() {
               Question {currentIndex + 1}
             </span>
             <span className="text-xs font-black text-white/50">
-              {answeredCount}/{questions.length}
+              {answeredCount}/{totalVisibleQuestions}
             </span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-white/10">

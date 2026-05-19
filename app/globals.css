@@ -102,6 +102,37 @@ a {
   }
 }
 
+@keyframes home-persona-swap {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+    filter: blur(8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes home-bug-flash {
+  0% {
+    transform: scale(0.96);
+    filter: saturate(0.8) brightness(0.86);
+  }
+
+  38% {
+    transform: scale(1.03);
+    filter: saturate(1.15) brightness(1.12);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
+  }
+}
+
 @keyframes ritual-fade {
   0% {
     opacity: 0;
@@ -234,7 +265,7 @@ a {
 .home-hero-visual {
   position: relative;
   display: grid;
-  min-height: 286px;
+  min-height: 318px;
   place-items: center;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -244,6 +275,16 @@ a {
     linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
     #0d0f18;
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+}
+
+.home-hero-visual::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.12), transparent 8rem),
+    linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.18));
+  pointer-events: none;
 }
 
 .home-table-ring {
@@ -277,6 +318,54 @@ a {
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 24px 52px rgba(0, 0, 0, 0.42);
   animation: home-card-float 5.8s ease-in-out infinite;
+}
+
+.home-scanner-card {
+  position: relative;
+  z-index: 2;
+  width: min(78%, 312px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(215, 180, 106, 0.3);
+  border-radius: 26px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+    #0d0f18;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 24px 56px rgba(0, 0, 0, 0.42);
+  animation: home-card-float 6s ease-in-out infinite;
+}
+
+.home-scanner-card-bug {
+  border-color: rgba(155, 109, 255, 0.68);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 44px rgba(155, 109, 255, 0.22),
+    0 24px 56px rgba(0, 0, 0, 0.42);
+}
+
+.home-scanner-card-bug::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    repeating-linear-gradient(0deg, rgba(155, 109, 255, 0.14) 0 2px, transparent 2px 18px),
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.home-scanner-image {
+  object-fit: contain;
+  padding: 8px;
+  animation: home-persona-swap 520ms ease-out both;
+}
+
+.home-scanner-image-bug {
+  object-fit: contain;
+  padding: 0;
+  animation: home-bug-flash 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .home-scan-line {

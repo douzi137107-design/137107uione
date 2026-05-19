@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HomePersonaScanner from "@/components/home-persona-scanner";
 import { complianceStatement } from "@/data/personas";
 
 export default function HomePage() {
@@ -17,34 +18,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="home-hero-visual">
-            <div className="home-table-ring" />
-            <div className="home-card-back">
-              <div className="home-scan-line" />
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.18em] text-white/45">
-                <span>PokerTI</span>
-                <span>Locked</span>
-              </div>
-              <div className="mt-10 text-center">
-                <p className="text-xs font-black uppercase tracking-[0.26em] text-violet">Personality System</p>
-                <p className="mt-3 text-4xl font-black tracking-normal text-white">UNKNOWN</p>
-                <p className="mt-3 text-xs font-bold text-white/45">Hidden Archive: Locked</p>
-              </div>
-              <div className="mt-auto grid grid-cols-3 gap-2 text-[10px] font-black uppercase tracking-[0.14em] text-white/40">
-                <span>Read</span>
-                <span className="text-center">Range</span>
-                <span className="text-right">Style</span>
-              </div>
-            </div>
-            <div className="home-pocket-card home-pocket-left">
-              <span>A</span>
-              <span>♠</span>
-            </div>
-            <div className="home-pocket-card home-pocket-right">
-              <span>K</span>
-              <span>♥</span>
-            </div>
-          </div>
+          <HomePersonaScanner />
 
           <div className="space-y-4">
             <h1 className="text-5xl font-black leading-tight tracking-normal text-white">

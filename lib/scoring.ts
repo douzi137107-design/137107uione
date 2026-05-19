@@ -17,15 +17,21 @@ export type ResultPayload = {
   hiddenUnlocked?: "BUG" | "KING" | null;
 };
 
-const expertPath = [
+export const expertPath = [
   2, 3, 0, 0, 0, 0, 0, 2,
   0, 0, 2, 3, 2, 2, 0, 2,
   2, 0, 3, 3, 2, 3, 2, 0,
   1, 3, 2, 0, 3, 3, 2, 0,
 ];
 
-const hiddenCorrectOptions = [2, 0, 3];
-const baseQuestionCount = expertPath.length;
+export const hiddenCorrectOptions = [2, 0, 3];
+export const baseQuestionCount = expertPath.length;
+
+export function isExpertPathAnswers(answers: AnswerRecord[]) {
+  return expertPath.every((optionIndex, questionIndex) =>
+    answers.some((answer) => answer.questionIndex === questionIndex && answer.optionIndex === optionIndex),
+  );
+}
 
 export function createEmptyScores(): ScoreMap {
   return personaOrder.reduce((scores, key) => {
@@ -51,9 +57,7 @@ export function calculateResult(answers: AnswerRecord[]): ResultPayload {
     });
   });
 
-  const isExpertPath = expertPath.every((optionIndex, questionIndex) =>
-    normalAnswers.some((answer) => answer.questionIndex === questionIndex && answer.optionIndex === optionIndex),
-  );
+  const isExpertPath = isExpertPathAnswers(normalAnswers);
   const hiddenCorrectCount = hiddenCorrectOptions.reduce((count, optionIndex, index) => {
     const answer = hiddenAnswers.find((item) => item.questionIndex === baseQuestionCount + index);
     return count + (answer?.optionIndex === optionIndex ? 1 : 0);
