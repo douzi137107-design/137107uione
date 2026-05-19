@@ -34,7 +34,7 @@ export default function HomePersonaScanner() {
         const next = regularPersonaKeys[Math.floor(Math.random() * regularPersonaKeys.length)];
         return next === current ? regularPersonaKeys[(regularPersonaKeys.indexOf(next) + 3) % regularPersonaKeys.length] : next;
       });
-    }, 1450);
+    }, 2800);
 
     return () => window.clearInterval(timer);
   }, []);
