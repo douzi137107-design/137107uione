@@ -52,12 +52,77 @@ function topScoreRows(scores: ScoreMap | null) {
     .slice(0, 5);
 }
 
+function loadPosterImage(src: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = src;
+  });
+}
+
+function roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function drawWrappedText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+  maxLines?: number,
+) {
+  const chars = Array.from(text);
+  const lines: string[] = [];
+  let line = "";
+
+  for (const char of chars) {
+    const testLine = line + char;
+    if (ctx.measureText(testLine).width > maxWidth && line) {
+      lines.push(line);
+      line = char;
+      if (maxLines && lines.length === maxLines) {
+        break;
+      }
+    } else {
+      line = testLine;
+    }
+  }
+
+  if ((!maxLines || lines.length < maxLines) && line) {
+    lines.push(line);
+  }
+
+  if (maxLines && lines.length === maxLines && chars.join("").length > lines.join("").length) {
+    lines[lines.length - 1] = `${lines[lines.length - 1].slice(0, -2)}...`;
+  }
+
+  lines.forEach((currentLine, index) => {
+    ctx.fillText(currentLine, x, y + index * lineHeight);
+  });
+
+  return lines.length * lineHeight;
+}
+
 export default function ResultClient() {
   const router = useRouter();
   const storedResult = useSyncExternalStore(subscribeToStorage, getStoredResultSnapshot, getServerSnapshot);
   const resultPayload = useMemo(() => parseStoredResult(storedResult), [storedResult]);
   const resultKey = resultPayload?.result ?? null;
-  const [copyState, setCopyState] = useState("复制分享文案");
+  const [shareState, setShareState] = useState("分享");
+  const [sharePoster, setSharePoster] = useState<string | null>(null);
   const [isRevealing, setIsRevealing] = useState(true);
 
   useEffect(() => {
@@ -106,14 +171,145 @@ export default function ResultClient() {
         ? "我的 PokerTI 隐藏人格是：KING｜被雪藏的王。不是我没有标签，是系统不敢轻易给我贴标签。"
         : `我的 PokerTI 牌桌人格是：${persona.englishName}｜${persona.chineseName}。${persona.description} 你也来测测。`;
 
-  async function copyShareText() {
+  async function createSharePoster() {
+    setShareState("生成分享图中...");
+
     try {
-      await navigator.clipboard.writeText(shareText);
-      setCopyState("已复制");
-      window.setTimeout(() => setCopyState("复制分享文案"), 1600);
+      const canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1680;
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) {
+        throw new Error("Canvas is not supported.");
+      }
+
+      const isRoyal = persona.key === "KING";
+      const accent = isRoyal ? "#f5b84a" : persona.key === "BUG" ? "#9b6dff" : "#30d58a";
+      const secondaryAccent = isRoyal ? "#fff2bf" : "#9b6dff";
+
+      const background = ctx.createLinearGradient(0, 0, 1080, 1680);
+      background.addColorStop(0, "#151221");
+      background.addColorStop(0.48, "#0c1018");
+      background.addColorStop(1, "#07080d");
+      ctx.fillStyle = background;
+      ctx.fillRect(0, 0, 1080, 1680);
+
+      ctx.save();
+      ctx.globalAlpha = 0.12;
+      ctx.fillStyle = accent;
+      ctx.font = "900 54px Arial, 'Microsoft YaHei', sans-serif";
+      ctx.translate(130, 260);
+      ctx.rotate(-0.32);
+      for (let row = 0; row < 7; row += 1) {
+        for (let col = 0; col < 3; col += 1) {
+          ctx.fillText("pokerti.top", col * 390, row * 240);
+        }
+      }
+      ctx.restore();
+
+      ctx.save();
+      roundedRect(ctx, 54, 54, 972, 1572, 46);
+      ctx.fillStyle = "rgba(255,255,255,0.055)";
+      ctx.fill();
+      ctx.strokeStyle = isRoyal ? "rgba(245,184,74,0.42)" : "rgba(255,255,255,0.16)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.save();
+      roundedRect(ctx, 90, 92, 900, 760, 38);
+      ctx.fillStyle = isRoyal ? "rgba(245,184,74,0.09)" : "rgba(155,109,255,0.12)";
+      ctx.fill();
+      ctx.clip();
+      try {
+        const image = await loadPosterImage(persona.image);
+        const ratio = Math.min(900 / image.width, 760 / image.height);
+        const width = image.width * ratio;
+        const height = image.height * ratio;
+        ctx.drawImage(image, 90 + (900 - width) / 2, 92 + (760 - height) / 2, width, height);
+      } catch {
+        ctx.fillStyle = "rgba(155,109,255,0.24)";
+        ctx.fillRect(90, 92, 900, 760);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "900 112px Arial, 'Microsoft YaHei', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(persona.englishName, 540, 470);
+      }
+      ctx.restore();
+
+      ctx.save();
+      const fade = ctx.createLinearGradient(0, 700, 0, 900);
+      fade.addColorStop(0, "rgba(7,8,13,0)");
+      fade.addColorStop(1, "#07080d");
+      ctx.fillStyle = fade;
+      ctx.fillRect(90, 690, 900, 170);
+      ctx.restore();
+
+      ctx.textAlign = "left";
+      ctx.fillStyle = accent;
+      ctx.font = "900 30px Arial, 'Microsoft YaHei', sans-serif";
+      ctx.fillText(isHiddenPersona ? "HIDDEN ARCHIVE" : "POKERTI RESULT", 100, 930);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "900 112px Arial, 'Microsoft YaHei', sans-serif";
+      ctx.fillText(persona.englishName, 96, 1046);
+
+      ctx.fillStyle = "rgba(255,255,255,0.74)";
+      ctx.font = "900 44px Arial, 'Microsoft YaHei', sans-serif";
+      ctx.fillText(persona.chineseName, 102, 1108);
+
+      let tagX = 100;
+      let tagY = 1162;
+      persona.strengths.slice(0, 4).forEach((tag) => {
+        ctx.font = "800 28px Arial, 'Microsoft YaHei', sans-serif";
+        const width = Math.min(280, ctx.measureText(tag).width + 48);
+        if (tagX + width > 980) {
+          tagX = 100;
+          tagY += 58;
+        }
+        roundedRect(ctx, tagX, tagY, width, 42, 21);
+        ctx.fillStyle = "rgba(48,213,138,0.14)";
+        ctx.fill();
+        ctx.fillStyle = "#67f0b0";
+        ctx.fillText(tag, tagX + 24, tagY + 30);
+        tagX += width + 16;
+      });
+
+      ctx.save();
+      roundedRect(ctx, 90, 1268, 900, 230, 30);
+      ctx.fillStyle = "rgba(255,255,255,0.075)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.12)";
+      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.82)";
+      ctx.font = "700 34px Arial, 'Microsoft YaHei', sans-serif";
+      drawWrappedText(ctx, shareText, 128, 1330, 824, 48, 4);
+      ctx.restore();
+
+      ctx.fillStyle = secondaryAccent;
+      ctx.font = "900 30px Arial, 'Microsoft YaHei', sans-serif";
+      ctx.fillText("pokerti.top", 100, 1566);
+
+      ctx.textAlign = "right";
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      ctx.font = "700 21px Arial, 'Microsoft YaHei', sans-serif";
+      drawWrappedText(
+        ctx,
+        "本测试仅用于德扑兴趣社交娱乐交流，不提供金钱输赢建议，禁止任何形式的赌博行为。",
+        990,
+        1544,
+        470,
+        30,
+        2,
+      );
+
+      setSharePoster(canvas.toDataURL("image/png"));
+      setShareState("分享图已生成");
+      window.setTimeout(() => setShareState("分享"), 1600);
     } catch {
-      setCopyState("复制失败，请手动复制");
-      window.setTimeout(() => setCopyState("复制分享文案"), 1800);
+      setShareState("生成失败，请再试一次");
+      window.setTimeout(() => setShareState("分享"), 1800);
     }
   }
 
@@ -250,13 +446,24 @@ export default function ResultClient() {
           </div>
 
           <div className="grid gap-3">
-            <button type="button" onClick={copyShareText} className="primary-button w-full">
-              {copyState}
+            <button type="button" onClick={createSharePoster} className="primary-button w-full">
+              {shareState}
             </button>
             <Link href="/test" className="secondary-button w-full">
               重新测试
             </Link>
           </div>
+
+          {sharePoster ? (
+            <section className="rounded-2xl border border-violet/35 bg-violet-soft/30 p-3">
+              <p className="mb-3 text-center text-xs font-bold text-white/45">长按图片即可保存分享</p>
+              <img
+                src={sharePoster}
+                alt={`${persona.englishName} 分享图`}
+                className="w-full rounded-xl border border-white/10 bg-night shadow-card"
+              />
+            </section>
+          ) : null}
 
           <div className="space-y-2 text-center">
             <p className="text-xs leading-5 text-white/40">{complianceStatement}</p>
