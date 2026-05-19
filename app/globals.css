@@ -105,19 +105,19 @@ a {
 @keyframes home-persona-swap {
   0% {
     opacity: 0;
-    transform: translateY(-8%) scale(1.34);
+    transform: translateY(8px) scale(0.96);
     filter: blur(10px) saturate(0.86);
   }
 
   62% {
     opacity: 1;
-    transform: translateY(-15%) scale(1.48);
+    transform: translateY(0) scale(1.04);
     filter: blur(0) saturate(1.05);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(-14%) scale(1.45);
+    transform: translateY(0) scale(1);
     filter: blur(0) saturate(1);
   }
 }
@@ -125,19 +125,19 @@ a {
 @keyframes home-bug-flash {
   0% {
     opacity: 0;
-    transform: translateY(-10%) scale(1.42);
+    transform: translateY(8px) scale(0.98);
     filter: blur(12px) saturate(0.8) brightness(0.86);
   }
 
   38% {
     opacity: 1;
-    transform: translateY(-18%) scale(1.64);
+    transform: translateY(0) scale(1.08);
     filter: blur(0) saturate(1.15) brightness(1.12);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(-17%) scale(1.58);
+    transform: translateY(0) scale(1.03);
     filter: saturate(1) brightness(1);
   }
 }
@@ -368,17 +368,17 @@ a {
 
 .home-scanner-image {
   object-fit: contain;
-  object-position: top center;
-  padding: 0;
-  transform-origin: top center;
+  object-position: center;
+  padding: 18px;
+  transform-origin: center;
   animation: home-persona-swap 980ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .home-scanner-image-bug {
   object-fit: contain;
-  object-position: top center;
-  padding: 0;
-  transform-origin: top center;
+  object-position: center;
+  padding: 12px;
+  transform-origin: center;
   animation: home-bug-flash 1080ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 

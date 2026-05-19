@@ -41,6 +41,7 @@ export default function HomePersonaScanner() {
 
   const isBugFlash = scanCount % 5 === 0;
   const persona = useMemo(() => personas[isBugFlash ? "BUG" : personaKey], [isBugFlash, personaKey]);
+  const scannerImage = `/personas/scanner/${persona.key.toLowerCase()}.png`;
 
   return (
     <div className="home-hero-visual">
@@ -49,7 +50,7 @@ export default function HomePersonaScanner() {
         <div className="home-scan-line" />
         <Image
           key={`${persona.key}-${scanCount}`}
-          src={persona.image}
+          src={scannerImage}
           alt={persona.chineseName}
           fill
           sizes="(max-width: 640px) 78vw, 320px"
