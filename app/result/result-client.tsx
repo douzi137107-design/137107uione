@@ -189,7 +189,7 @@ export default function ResultClient() {
 
     try {
       const posterWidth = 1080;
-      const posterHeight = 1440;
+      const posterHeight = 1920;
       const canvas = document.createElement("canvas");
       canvas.width = posterWidth;
       canvas.height = posterHeight;
@@ -224,7 +224,7 @@ export default function ResultClient() {
       ctx.restore();
 
       ctx.save();
-      roundedRect(ctx, 52, 52, 976, 1336, 52);
+      roundedRect(ctx, 52, 52, 976, 1816, 52);
       ctx.fillStyle = "rgba(255,255,255,0.052)";
       ctx.fill();
       ctx.strokeStyle = isRoyal ? "rgba(245,184,74,0.48)" : persona.key === "BUG" ? "rgba(155,109,255,0.42)" : "rgba(255,255,255,0.15)";
@@ -233,8 +233,8 @@ export default function ResultClient() {
       ctx.restore();
 
       ctx.save();
-      roundedRect(ctx, 78, 76, 924, 756, 44);
-      const imagePanel = ctx.createLinearGradient(78, 76, 1002, 832);
+      roundedRect(ctx, 70, 72, 940, 940, 44);
+      const imagePanel = ctx.createLinearGradient(70, 72, 1010, 1012);
       imagePanel.addColorStop(0, isRoyal ? "rgba(245,184,74,0.16)" : "rgba(255,255,255,0.08)");
       imagePanel.addColorStop(1, persona.key === "BUG" ? "rgba(155,109,255,0.16)" : "rgba(0,0,0,0.2)");
       ctx.fillStyle = imagePanel;
@@ -242,23 +242,23 @@ export default function ResultClient() {
       ctx.clip();
       try {
         const image = await loadPosterImage(persona.image);
-        const ratio = Math.min(924 / image.width, 756 / image.height);
+        const ratio = Math.min(940 / image.width, 940 / image.height);
         const width = image.width * ratio;
         const height = image.height * ratio;
-        ctx.drawImage(image, 78 + (924 - width) / 2, 76 + (756 - height) / 2, width, height);
+        ctx.drawImage(image, 70 + (940 - width) / 2, 72 + (940 - height) / 2, width, height);
       } catch {
         ctx.fillStyle = "rgba(155,109,255,0.24)";
-        ctx.fillRect(78, 76, 924, 756);
+        ctx.fillRect(70, 72, 940, 940);
         ctx.fillStyle = "#ffffff";
         ctx.font = "900 112px Arial, 'Microsoft YaHei', sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(persona.englishName, 540, 448);
+        ctx.fillText(persona.englishName, 540, 548);
       }
-      const imageFade = ctx.createLinearGradient(0, 570, 0, 840);
+      const imageFade = ctx.createLinearGradient(0, 790, 0, 1024);
       imageFade.addColorStop(0, "rgba(7,8,13,0)");
       imageFade.addColorStop(1, "rgba(7,8,13,0.88)");
       ctx.fillStyle = imageFade;
-      ctx.fillRect(78, 560, 924, 280);
+      ctx.fillRect(70, 780, 940, 250);
       ctx.restore();
 
       if (persona.key === "BUG") {
@@ -266,7 +266,7 @@ export default function ResultClient() {
         ctx.globalAlpha = 0.24;
         ctx.strokeStyle = "#9b6dff";
         ctx.lineWidth = 3;
-        for (let y = 156; y < 760; y += 66) {
+        for (let y = 156; y < 940; y += 74) {
           ctx.beginPath();
           ctx.moveTo(104, y);
           ctx.lineTo(986, y + (y % 132 === 0 ? 16 : -12));
@@ -276,7 +276,7 @@ export default function ResultClient() {
       }
 
       ctx.save();
-      roundedRect(ctx, 86, isHiddenPersona ? 718 : 744, 908, isHiddenPersona ? 492 : 456, 38);
+      roundedRect(ctx, 86, 980, 908, isHiddenPersona ? 574 : 548, 38);
       ctx.fillStyle = "rgba(7,8,13,0.78)";
       ctx.fill();
       ctx.strokeStyle = isRoyal ? "rgba(245,184,74,0.26)" : "rgba(255,255,255,0.12)";
@@ -286,18 +286,18 @@ export default function ResultClient() {
       ctx.textAlign = "left";
       ctx.fillStyle = accent;
       ctx.font = "900 28px Arial, 'Microsoft YaHei', sans-serif";
-      ctx.fillText(isRoyal ? "SEALED KING" : isBug ? "SYSTEM GLITCH" : "POKERTI RESULT", 116, isHiddenPersona ? 786 : 812);
+      ctx.fillText(isRoyal ? "SEALED KING" : isBug ? "SYSTEM GLITCH" : "POKERTI RESULT", 116, 1054);
 
       ctx.fillStyle = "#ffffff";
-      ctx.font = isHiddenPersona ? "900 88px Arial, 'Microsoft YaHei', sans-serif" : "900 76px Arial, 'Microsoft YaHei', sans-serif";
-      drawWrappedText(ctx, posterTitle, 112, isHiddenPersona ? 890 : 902, 840, isHiddenPersona ? 92 : 84, 2);
+      ctx.font = isHiddenPersona ? "900 92px Arial, 'Microsoft YaHei', sans-serif" : "900 82px Arial, 'Microsoft YaHei', sans-serif";
+      drawWrappedText(ctx, posterTitle, 112, 1160, 840, isHiddenPersona ? 96 : 88, 2);
 
       ctx.fillStyle = "rgba(255,255,255,0.66)";
       ctx.font = "800 26px Arial, 'Microsoft YaHei', sans-serif";
-      ctx.fillText(isHiddenPersona ? "隐藏人格已解锁" : "你的人格标签", 116, isHiddenPersona ? 1024 : 1000);
+      ctx.fillText(isHiddenPersona ? "隐藏人格已解锁" : "你的人格标签", 116, 1306);
 
       let tagX = 116;
-      let tagY = isHiddenPersona ? 1054 : 1030;
+      let tagY = 1338;
       persona.strengths.slice(0, 4).forEach((tag) => {
         ctx.font = "800 26px Arial, 'Microsoft YaHei', sans-serif";
         const width = Math.min(300, ctx.measureText(tag).width + 44);
@@ -314,23 +314,23 @@ export default function ResultClient() {
       });
 
       ctx.fillStyle = "rgba(255,255,255,0.82)";
-      ctx.font = "700 30px Arial, 'Microsoft YaHei', sans-serif";
-      drawWrappedText(ctx, posterIntro, 116, isHiddenPersona ? 1172 : 1148, 840, 40, isHiddenPersona ? 3 : 4);
+      ctx.font = "700 32px Arial, 'Microsoft YaHei', sans-serif";
+      drawWrappedText(ctx, posterIntro, 116, 1480, 840, 44, isHiddenPersona ? 3 : 4);
 
       ctx.save();
-      roundedRect(ctx, 86, 1234, 908, 96, 30);
+      roundedRect(ctx, 86, 1662, 908, 104, 30);
       ctx.fillStyle = isRoyal ? "rgba(245,184,74,0.12)" : persona.key === "BUG" ? "rgba(155,109,255,0.16)" : "rgba(255,255,255,0.075)";
       ctx.fill();
       ctx.strokeStyle = "rgba(255,255,255,0.12)";
       ctx.stroke();
       ctx.fillStyle = "rgba(255,255,255,0.86)";
       ctx.font = "800 25px Arial, 'Microsoft YaHei', sans-serif";
-      drawWrappedText(ctx, posterShareText, 122, 1274, 836, 34, 2);
+      drawWrappedText(ctx, posterShareText, 122, 1704, 836, 34, 2);
       ctx.restore();
 
       ctx.fillStyle = secondaryAccent;
       ctx.font = "900 28px Arial, 'Microsoft YaHei', sans-serif";
-      ctx.fillText("pokerti.top", 92, 1372);
+      ctx.fillText("pokerti.top", 92, 1832);
 
       ctx.textAlign = "right";
       ctx.fillStyle = "rgba(255,255,255,0.5)";
@@ -339,7 +339,7 @@ export default function ResultClient() {
         ctx,
         "本测试仅用于德扑兴趣社交娱乐交流，不提供金钱输赢建议，禁止任何形式的赌博行为。",
         986,
-        1356,
+        1816,
         500,
         26,
         2,
