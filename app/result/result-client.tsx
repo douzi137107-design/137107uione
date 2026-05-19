@@ -124,6 +124,7 @@ export default function ResultClient() {
   const [shareState, setShareState] = useState("分享");
   const [sharePoster, setSharePoster] = useState<string | null>(null);
   const [isRevealing, setIsRevealing] = useState(true);
+  const [showSystemNote, setShowSystemNote] = useState(false);
 
   useEffect(() => {
     if (!resultPayload) {
@@ -183,6 +184,18 @@ export default function ResultClient() {
       : persona.key === "KING"
         ? "不是我没有标签，是系统不敢轻易给我贴标签。"
         : `我的 PokerTI 牌桌人格是：${posterTitle}。你也来测测。`;
+  const systemNote =
+    persona.key === "BUG"
+      ? "备注：该用户无法被稳定归类。曾同时触发 ROCK、YOLO、XUEBA、DRAMA、FISHER 等多个标签。建议：停止分类，直接放行。"
+      : persona.key === "KING"
+        ? "备注：该用户不适合进入普通结果池。过强的稳定性、压迫感与控场能力会影响人格生态平衡。处理建议：继续雪藏。"
+        : "";
+  const posterSecretNote =
+    persona.key === "BUG"
+      ? "该结果由系统异常生成，请勿尝试修复。"
+      : persona.key === "KING"
+        ? "系统不推荐公开该结果。"
+        : "";
 
   async function createSharePoster() {
     setShareState("生成分享图中...");
@@ -260,6 +273,19 @@ export default function ResultClient() {
       ctx.fillStyle = imageFade;
       ctx.fillRect(70, 780, 940, 250);
       ctx.restore();
+
+      if (posterSecretNote) {
+        ctx.save();
+        roundedRect(ctx, 104, 112, 520, 52, 26);
+        ctx.fillStyle = isRoyal ? "rgba(245,184,74,0.18)" : "rgba(155,109,255,0.18)";
+        ctx.fill();
+        ctx.strokeStyle = isRoyal ? "rgba(245,184,74,0.34)" : "rgba(155,109,255,0.42)";
+        ctx.stroke();
+        ctx.fillStyle = isRoyal ? "#ffe39a" : "#d8c8ff";
+        ctx.font = "800 23px Arial, 'Microsoft YaHei', sans-serif";
+        ctx.fillText(posterSecretNote, 130, 147);
+        ctx.restore();
+      }
 
       if (persona.key === "BUG") {
         ctx.save();
@@ -448,13 +474,34 @@ export default function ResultClient() {
           </section>
 
           {isHiddenPersona ? (
-            <section className="rounded-2xl border border-violet/35 bg-violet-soft/45 p-4">
-              <h2 className="mb-3 text-sm font-black text-violet">系统提示</h2>
-              <p className="text-sm font-medium leading-7 text-white/65">
-                {isKing
-                  ? "该人格不在公开结果池中。触发封存档案：KING。系统封存协议已失效。"
-                  : "该人格不在常规结果池中。只有当测试结果极度均衡，同时多个核心能力都达到高分时才会触发。"}
-              </p>
+            <section className="space-y-3 rounded-2xl border border-violet/35 bg-violet-soft/45 p-4">
+              <div>
+                <h2 className="mb-3 text-sm font-black text-violet">系统提示</h2>
+                <p className="text-sm font-medium leading-7 text-white/65">
+                  {isKing
+                    ? "该人格不在公开结果池中。触发封存档案：KING。系统封存协议已失效。"
+                    : "该人格不在常规结果池中。只有当测试结果极度均衡，同时多个核心能力都达到高分时才会触发。"}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSystemNote((value) => !value)}
+                className={isKing ? "secondary-button w-full border-amber-200/30 text-amber-100" : "secondary-button w-full"}
+              >
+                {showSystemNote ? "收起系统备注" : "查看系统备注"}
+              </button>
+              {showSystemNote ? (
+                <div
+                  className={[
+                    "rounded-xl border p-4 text-sm font-medium leading-7",
+                    isKing
+                      ? "border-amber-200/25 bg-amber-200/10 text-amber-50/80"
+                      : "border-violet/30 bg-night/55 text-white/70",
+                  ].join(" ")}
+                >
+                  {systemNote}
+                </div>
+              ) : null}
             </section>
           ) : null}
 
